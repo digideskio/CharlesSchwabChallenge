@@ -7,60 +7,58 @@
 
 import Foundation
 
-enum DetailCellType : Int {
-    case overview
-    case directions
-    case phone
-    case website
-    case address
+// MARK: - DetailCellType
+
+enum DetailCellType: Int {
+    case overview, directions, phone, website, address
     
-    var cellIdentifier : String {
-        switch (self) {
-        case .overview:
-            return "OverviewCell"
-        case .directions:
-            return "DirectionsCell"
-        case .phone:
-            return "PhoneCell"
-        case .website:
-            return "WebSiteCell"
-        case .address:
-            return "AddressCell"
+    var cellIdentifier: String {
+        switch self {
+        case .overview:   return "OverviewCell"
+        case .directions: return "DirectionsCell"
+        case .phone:      return "PhoneCell"
+        case .website:    return "WebSiteCell"
+        case .address:    return "AddressCell"
         }
     }
 }
 
-class DetailViewModel {
-    let title: String
-    let availableCells:[DetailCellType] = [.overview, .directions, .phone, .website, .address]
-    let restaurant: Restaurant
+// MARK: - DetailViewModel
+
+final class DetailViewModel {
+    
+    // MARK: - Property Delcarations
+    
+    let title:          String = "Details"
+    let availableCells: [DetailCellType] = [.overview, .directions, .phone, .website, .address]
+    let restaurant:     Restaurant
+    
+    // MARK: - Initialization
     
     init(restaurant: Restaurant) {
         self.restaurant = restaurant
-        self.title = "Details"
     }
     
-    func cellViewModelFor(indexPath: IndexPath) -> DetailCellViewModel? {
-        var viewModel:DetailCellViewModel? = nil
-        
-        if indexPath.row == DetailCellType.overview.rawValue {
-            viewModel = OverviewCellViewModel(restaurant: restaurant)
-        } else if indexPath.row == DetailCellType.phone.rawValue {
-            viewModel = PhoneCellViewModel(restaurant: restaurant)
-        } else if indexPath.row == DetailCellType.website.rawValue {
-            viewModel = WebSiteCellViewModel(restaurant: restaurant)
-        } else if indexPath.row == DetailCellType.address.rawValue {
-            viewModel = AddressCellViewModel(restaurant: restaurant)
-        } else if indexPath.row == DetailCellType.directions.rawValue {
-            viewModel = DirectionsCellViewModel(restaurant: restaurant)
+    // MARK: - Instance Methods
+    
+    func cellViewModel(for indexPath: IndexPath) -> DetailCellViewModel? {
+        guard let detailCellType = DetailCellType(rawValue: indexPath.row) else { return nil }
+        switch detailCellType {
+        case .overview:   return OverviewCellViewModel(restaurant: restaurant)
+        case .directions: return DirectionsCellViewModel(restaurant: restaurant)
+        case .phone:      return PhoneCellViewModel(restaurant: restaurant)
+        case .website:    return WebSiteCellViewModel(restaurant: restaurant)
+        case .address:    return AddressCellViewModel(restaurant: restaurant)
         }
-        return viewModel
     }
 }
 
+// MARK: - DetailCellViewModel
+
 class DetailCellViewModel {
-    func getAction()->String? {
+    func getAction() -> String? {
         return nil
     }
 }
+
 

@@ -7,10 +7,16 @@
 
 import UIKit
 
-class AddressTableViewCell: DetailTableViewCell {
+// MARK: - AddressTableViewCell
 
-    @IBOutlet var addressLabel: UILabel!
-    @IBOutlet var cityStateLabel: UILabel!
+final class AddressTableViewCell: DetailTableViewCell {
+
+    // MARK: - Property Delcarations
+    
+    @IBOutlet var addressLabel:   UILabel?
+    @IBOutlet var cityStateLabel: UILabel?
+    
+    // MARK: - Nib Awakening
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,13 +26,13 @@ class AddressTableViewCell: DetailTableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    override func configureWithViewModel(viewModel: DetailCellViewModel) {
-        super.configureWithViewModel(viewModel: viewModel)
-        if let viewModel = viewModel as? AddressCellViewModel {
-            self.addressLabel.text = viewModel.address
-            self.cityStateLabel.text = viewModel.cityState
-            self.imageView?.image = UIImage(named: viewModel.imageName)
-        }
+    // MARK: - View Configuration
+    
+    override func configure(with viewModel: DetailCellViewModel) {
+        super.configure(with: viewModel)
+        guard let viewModel = viewModel as? AddressCellViewModel else { return }
+        addressLabel?.text   = viewModel.address
+        cityStateLabel?.text = viewModel.cityState
+        imageView?.image     = UIImage(named: viewModel.imageName)
     }
-
 }

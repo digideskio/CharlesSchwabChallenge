@@ -7,21 +7,28 @@
 
 import Foundation
 
-class AddressCellViewModel: DetailCellViewModel {
-    let address: String
-    let cityState: String
+// MARK: - AddressCellViewModel
+
+final class AddressCellViewModel: DetailCellViewModel {
+    
+    // MARK: - Property Delcarations
+    
     let imageName: String = "address-image"
+    let address:   String
+    let cityState: String
     let longitude: Double
-    let latitude: Double
+    let latitude:  Double
+    
+    // MARK: - Initialization
     
     init(restaurant: Restaurant) {
-        self.address = restaurant.address
-        self.cityState = restaurant.city + ", " + restaurant.state
-        self.longitude = restaurant.longitude
-        self.latitude = restaurant.latitude
+        address   = restaurant.address
+        cityState = restaurant.city + ", " + restaurant.state
+        longitude = restaurant.longitude
+        latitude  = restaurant.latitude
     }
     
     override func getAction() -> String? {
-        return "http://maps.apple.com/?ll=\(self.latitude),\(self.longitude)"
+        return "http://maps.apple.com/?ll=\(latitude),\(longitude)"
     }
 }

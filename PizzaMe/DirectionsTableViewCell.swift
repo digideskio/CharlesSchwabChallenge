@@ -7,8 +7,12 @@
 
 import UIKit
 
-class DirectionsTableViewCell: DetailTableViewCell {
+// MARK: - DirectionsTableViewCell
 
+final class DirectionsTableViewCell: DetailTableViewCell {
+
+    // MARK: - Nib Awakening
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -17,11 +21,12 @@ class DirectionsTableViewCell: DetailTableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    override func configureWithViewModel(viewModel: DetailCellViewModel) {
-        super.configureWithViewModel(viewModel: viewModel)
-        if let viewModel = viewModel as? DirectionsCellViewModel {
-            self.imageView?.image = UIImage(named: viewModel.imageName)
-        }
+    // MARK: - View Configuration
+    
+    override func configure(with viewModel: DetailCellViewModel) {
+        super.configure(with: viewModel)
+        guard let viewModel = viewModel as? DirectionsCellViewModel else { return }
+        imageView?.image = UIImage(named: viewModel.imageName)
     }
 
 }

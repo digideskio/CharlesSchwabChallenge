@@ -7,20 +7,27 @@
 
 import Foundation
 
+// MARK: - DirectionsCellViewModel
+
 class DirectionsCellViewModel: DetailCellViewModel {
-    let address: String
-    let city: String
-    let state: String
+    
+    // MARK: - Property Delcarations
+    
+    let address:   String
+    let city:      String
+    let state:     String
     let imageName: String = "map-icon"
     
+    // MARK: - Initialization
+    
     init(restaurant: Restaurant) {
-        self.address = restaurant.address
-        self.city = restaurant.city
-        self.state = restaurant.state
+        address = restaurant.address
+        city    = restaurant.city
+        state   = restaurant.state
     }
     
     override func getAction() -> String? {
-        let destinationAddress = "\(self.address),\(self.city),\(self.state)".components(separatedBy: NSCharacterSet.whitespacesAndNewlines).joined(separator: "+")
+        let destinationAddress = "\(address),\(city),\(state)".components(separatedBy: .whitespacesAndNewlines).joined(separator: "+")
         return "http://maps.apple.com/?daddr=\(destinationAddress)"
     }
     

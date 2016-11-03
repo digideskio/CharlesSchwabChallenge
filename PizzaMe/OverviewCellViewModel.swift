@@ -7,12 +7,19 @@
 
 import Foundation
 
-class OverviewCellViewModel : DetailCellViewModel {
-    let name: String
+// MARK: - OverviewCellViewModel
+
+final class OverviewCellViewModel: DetailCellViewModel {
+    
+    // MARK: - Property Delcarations
+    
+    let name:     String
     let distance: String
     
+    // MARK: - Initialization
+    
     init(restaurant: Restaurant) {
-        self.name = restaurant.name
-        self.distance = "\(restaurant.distance) mile(s)"
+        name     = restaurant.name
+        distance = "\(restaurant.distance) mile(s)"
     }
 }

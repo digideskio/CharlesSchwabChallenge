@@ -7,20 +7,18 @@
 
 import Foundation
 
+// MARK: - RestaurantListViewModel
+
 struct RestaurantListViewModel {
-    let restaurantCount:Int
-    var restaurantList: Array<Restaurant>
+    let restaurantList: Array<Restaurant>
     
-    init(restaurantList: Array<Restaurant>) {
-        self.restaurantList = restaurantList
-        self.restaurantList.sort { $0.distance < $1.distance }
-        restaurantCount = restaurantList.count
+    init(restaurantList: Array<Restaurant>) { // TODO: MOVE THIS ELSEWHERE
+        self.restaurantList = restaurantList.sorted { $0.distance < $1.distance }
     }
-    
+}
+
+extension RestaurantListViewModel {
     func restaurant(indexPath: IndexPath) -> Restaurant? {
-        guard indexPath.row < restaurantList.count else {
-            return nil
-        }
-        return restaurantList[indexPath.row]
+        return indexPath.row < restaurantList.count ? restaurantList[indexPath.row] : nil
     }
 }

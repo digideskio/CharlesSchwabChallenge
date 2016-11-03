@@ -7,34 +7,28 @@
 
 import Foundation
 
-typealias SearchServiceCompletionHandler = (_ response: SearchServiceResponse?, _ error: NSError?) -> Void
+typealias SearchServiceCompletionHandler = (_ response: SearchServiceResponse?, _ error: Error?) -> Void
 
-class SearchService {
+// MARK: - SearchService
+
+final class SearchService {
     
-    func resultsByZip(zipCode: String, completion: @escaping SearchServiceCompletionHandler) {
-        let servicePath = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20local.search%20where%20zip%3D%27\(zipCode)%27%20and%20query%3D%27pizza%27&format=json&diagnostics=false&callback="
-        guard let url = URL(string: servicePath) else {
-            return
-        }
-        let session = URLSession(configuration: URLSessionConfiguration.default)
-        let task = session.dataTask(with: url) { data, response, error in
-            if let error = error {
-                completion(nil, error as NSError?)
+    func results(for zipCode: String, completion: @escaping SearchServiceCompletionHandler) {
+        let servicePath = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20local.search%20where%20zip%3D%27\(zipCode)%27%20and%20query%3D%27pizza%27&format=json&diagnostics=false&callback=" // FIXME: MOVE THIS ELEWHERE
+        guard let url = URL(string: servicePath) else { return }
+        URLSession(configuration: URLSessionConfiguration.default).dataTask(with: url) { data, response, dataTaskError in
+            guard let data = data, (response as? HTTPURLResponse)?.statusCode == 200 else {
+                completion(nil, dataTaskError)
+                return
             }
-            if let response = response as? HTTPURLResponse {
-                guard response.statusCode == 200 else  {
-                    completion(nil, error as NSError?)
-                    return
-                }
-                guard let data = data else {
-                    completion(nil, error as NSError?)
-                    return
-                }
-                let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-                let response = SearchServiceResponse(response: json as? [String:AnyObject])
-                completion(response, nil)
+            
+            do {
+                let json  = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject]
+                let searchServiceResponse = SearchServiceResponse(response: json.flatMap { $0 })
+                completion(searchServiceResponse, nil)
+            } catch {
+                completion(nil, error)
             }
-        }
-        task.resume()
+        }.resume()
     }
 }

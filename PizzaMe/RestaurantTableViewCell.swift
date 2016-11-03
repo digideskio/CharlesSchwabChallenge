@@ -7,15 +7,21 @@
 
 import UIKit
 
-class RestaurantTableViewCell: UITableViewCell {
+// MARK: - RestaurantTableViewCell
 
-    @IBOutlet var name:UILabel!
-    @IBOutlet var distance:UILabel!
-    @IBOutlet var address:UILabel!
-    @IBOutlet var cityState:UILabel!
-    @IBOutlet var phoneNumber:UILabel!
+final class RestaurantTableViewCell: UITableViewCell {
+
+    // MARK: - Property Delcarations
+    
+    @IBOutlet var name:        UILabel?
+    @IBOutlet var distance:    UILabel?
+    @IBOutlet var address:     UILabel?
+    @IBOutlet var cityState:   UILabel?
+    @IBOutlet var phoneNumber: UILabel?
     
     var viewModel: RestaurantCellViewModel?
+    
+    // MARK: - Nib Awakening
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -24,13 +30,15 @@ class RestaurantTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
+    
+    // MARK: - View Configuration
 
     func configure(viewModel: RestaurantCellViewModel) {
-        self.viewModel = viewModel
-        name.text = viewModel.name
-        distance.text = "\(viewModel.distance) mile(s)"
-        address.text = viewModel.address
-        cityState.text = viewModel.cityState
-        phoneNumber.text = viewModel.phoneNumber
+        self.viewModel    = viewModel
+        name?.text        = viewModel.name
+        distance?.text    = "\(viewModel.distance) mile(s)"
+        address?.text     = viewModel.address
+        cityState?.text   = viewModel.cityState
+        phoneNumber?.text = viewModel.phoneNumber
     }
 }

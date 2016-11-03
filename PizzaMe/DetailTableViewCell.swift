@@ -7,9 +7,13 @@
 
 import UIKit
 
+// MARK: - DetailTableViewCell
+
 class DetailTableViewCell: UITableViewCell {
-    func configureWithViewModel(viewModel: DetailCellViewModel) {
+    
+    // MARK: - View Configuration
+    
+    func configure(with viewModel: DetailCellViewModel) {
         selectionStyle = (viewModel.getAction() != nil) ? .default : .none
     }
-
 }

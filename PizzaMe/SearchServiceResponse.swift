@@ -7,26 +7,29 @@
 
 import Foundation
 
-enum ResponseKeys: String {
-    case query      = "query"
-    case results    = "results"
-    case result     = "Result"
+// MARK: - SearchServiceResponseKeys
+
+struct SearchServiceResponseKeys {
+    static let query   = "query"
+    static let results = "results"
+    static let result  = "Result"
 }
 
-class SearchServiceResponse {
-    var restaurantList: Array<Restaurant> = Array()
+// MARK: - SearchServiceResponse
+
+final class SearchServiceResponse {
     
-    init?(response: [String:AnyObject]?) {
+    // MARK: - Property Delcarations
+    
+    let restaurantList: Array<Restaurant>
+    
+    // MARK: - Initialization
+    
+    init?(response: [String: AnyObject]?) {
         guard let response = response,
-            let query=response[ResponseKeys.query.rawValue],
-            let results = (query[ResponseKeys.results.rawValue] as? [String:AnyObject]),
-            let result = (results[ResponseKeys.result.rawValue] as? [[String:AnyObject]])  else {
-            return nil
-        }
-        for restaurantData in result {
-            if let restaurant = Restaurant(restaurant: restaurantData) {
-                restaurantList.append(restaurant)
-            }
-        }
+              let query    = response[SearchServiceResponseKeys.query],
+              let results  = query[SearchServiceResponseKeys.results]  as? [String: AnyObject],
+              let result   = results[SearchServiceResponseKeys.result] as? [[String: AnyObject]]  else { return nil }
+        restaurantList = result.flatMap(Restaurant.init)
     }
 }

@@ -7,7 +7,12 @@
 
 import UIKit
 
-class WebSiteTableViewCell: DetailTableViewCell {
+// MARK: - WebSiteTableViewCell
+
+final class WebSiteTableViewCell: DetailTableViewCell {
+    
+    // MARK: - Nib Awakening
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -16,11 +21,12 @@ class WebSiteTableViewCell: DetailTableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    override func configureWithViewModel(viewModel: DetailCellViewModel) {
-        super.configureWithViewModel(viewModel: viewModel)
-        if let viewModel = viewModel as? WebSiteCellViewModel {
-            self.detailTextLabel?.text = viewModel.webSite
-            self.imageView?.image = UIImage(named: viewModel.imageName)
-        }
+    // MARK: - View Configuration
+    
+    override func configure(with viewModel: DetailCellViewModel) {
+        super.configure(with: viewModel)
+        guard let viewModel = viewModel as? WebSiteCellViewModel else { return }
+        detailTextLabel?.text = viewModel.webSite
+        imageView?.image      = UIImage(named: viewModel.imageName)
     }
 }

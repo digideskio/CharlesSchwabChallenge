@@ -7,12 +7,19 @@
 
 import Foundation
 
-class WebSiteCellViewModel: DetailCellViewModel {
-    let webSite: String
+// MARK: - WebSiteCellViewModel
+
+final class WebSiteCellViewModel: DetailCellViewModel {
+    
+    // MARK: - Property Delcarations
+    
+    let webSite:   String
     let imageName: String = "icon-website"
     
+    // MARK: - Initialization
+    
     init(restaurant: Restaurant) {
-        self.webSite = restaurant.businessUrl
+        webSite = restaurant.businessURL
     }
     
     override func getAction() -> String? {

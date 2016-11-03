@@ -7,18 +7,24 @@
 
 import Foundation
 
+// MARK: - RestaurantCellViewModel
+
 struct RestaurantCellViewModel {
-    let name: String
-    let address: String
-    let cityState: String
+    let name:        String
+    let address:     String
+    let cityState:   String
     let phoneNumber: String
-    let distance: Double
-    
+    let distance:    Double
+}
+
+// MARK: - Initialization
+
+extension RestaurantCellViewModel {
     init(restaurant: Restaurant) {
-        name = restaurant.name
-        distance = restaurant.distance
-        cityState = restaurant.city + ", " + restaurant.state
-        address = restaurant.address
+        name        = restaurant.name
+        distance    = restaurant.distance
+        cityState   = restaurant.city + ", " + restaurant.state
+        address     = restaurant.address
         phoneNumber = restaurant.phone
     }
 }

@@ -7,11 +7,17 @@
 
 import UIKit
 
-class OverviewTableViewCell: DetailTableViewCell {
+// MARK: - OverviewTableViewCell
 
-    @IBOutlet var nameLabel:UILabel!
-    @IBOutlet var cuisineLabel:UILabel!
-    @IBOutlet var distanceLabel:UILabel!
+final class OverviewTableViewCell: DetailTableViewCell {
+
+    // MARK: - Property Delcarations
+    
+    @IBOutlet var nameLabel:     UILabel?
+    @IBOutlet var cuisineLabel:  UILabel?
+    @IBOutlet var distanceLabel: UILabel?
+    
+    // MARK: - Nib Awakening
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -21,12 +27,13 @@ class OverviewTableViewCell: DetailTableViewCell {
         super.setSelected(selected, animated: animated)
     }
 
-    override func configureWithViewModel(viewModel: DetailCellViewModel) {
-        super.configureWithViewModel(viewModel: viewModel)
-        if let viewModel = viewModel as? OverviewCellViewModel {
-            nameLabel.text = viewModel.name
-            distanceLabel.text = viewModel.distance
-        }
+    // MARK: - View Configuration
+    
+    override func configure(with viewModel: DetailCellViewModel) {
+        super.configure(with: viewModel)
+        guard let viewModel = viewModel as? OverviewCellViewModel else { return }
+        nameLabel?.text     = viewModel.name
+        distanceLabel?.text = viewModel.distance
     }
 }
 

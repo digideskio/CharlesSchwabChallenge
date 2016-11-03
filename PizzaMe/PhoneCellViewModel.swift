@@ -7,16 +7,25 @@
 
 import Foundation
 
-class PhoneCellViewModel: DetailCellViewModel {
+// MARK: - PhoneCellViewModel
+
+final class PhoneCellViewModel: DetailCellViewModel {
+    
+    // MARK: - Property Delcarations
+    
     let phoneNumber: String
-    let imageName: String = "phone_call"
+    let imageName:   String = "phone_call"
+    
+    // MARK: - Initialization
     
     init(restaurant: Restaurant) {
-        self.phoneNumber = restaurant.phone
+        phoneNumber = restaurant.phone
     }
     
     override func getAction() -> String? {
-        let digits = phoneNumber.components(separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
-        return "tel:\(digits)"
+        return "tel:" + phoneNumber.components(separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
     }
 }
+
+//        let digits = phoneNumber.components(separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
+//        return "tel:\(digits)"
