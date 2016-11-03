@@ -11,13 +11,29 @@ import UIKit
 // MARK: - MasterViewController
 
 class MasterViewController: UITableViewController {
+    
+    enum RestaurantSorted { // TODO: RENAME THIS
+        case name, distance
+    }
+    
 
     // MARK: - Property Delcarations
     
     private var detailViewController: DetailTableViewController? = nil
     fileprivate var viewModel:        RestaurantListViewModel?
+    fileprivate var restaurantSorted: RestaurantSorted = .distance {
+        didSet {
+            switch restaurantSorted { // FIXME: FIX THIS BUG
+            case .distance: self.sortBarButton?.title = "Sorted by: distance"
+            case .name:     self.sortBarButton?.title = "Sorted by: name"
+            }
+        }
+    }
     
-    @IBOutlet var pizzaSpinner: UIImageView?
+    // MARK: - IBOutlets
+    
+    @IBOutlet weak fileprivate var pizzaSpinner:  UIImageView?
+    @IBOutlet weak fileprivate var sortBarButton: UIBarButtonItem?
 
     // MARK: - ViewController Lifecycle
     
@@ -27,6 +43,7 @@ class MasterViewController: UITableViewController {
             tableView.tableFooterView    = UIView()
             tableView.rowHeight          = UITableViewAutomaticDimension
             tableView.estimatedRowHeight = 100
+            sortBarButton?.title = "" // FIXME: This is sloppy
         }
         guard let controllers = splitViewController?.viewControllers else { return }
         detailViewController = (controllers[controllers.count - 1] as? UINavigationController)?.topViewController as? DetailTableViewController
@@ -73,11 +90,25 @@ class MasterViewController: UITableViewController {
         return cell
     }
 
-    @IBAction func updateMyLocation(sender: AnyObject) {
+    // MARK: - IBActions
+    
+    @IBAction fileprivate func updateMyLocation(sender: AnyObject) {
         toggleSpinningPizza()
         let locationManager = LocationManager.sharedInstance
         locationManager.delegate = self
         locationManager.updateLocation()
+    }
+    
+    @IBAction fileprivate func sortRestaurants(_ sender: UIBarButtonItem) {
+        switch restaurantSorted { // FIXME: ABSTRACT CODE DUPLICATION AND CLEAN THIS UP!!!
+        case .distance:
+            viewModel = RestaurantListViewModel(restaurantList: viewModel!.restaurantList) { $0.distance < $1.distance }
+            restaurantSorted = .name
+        case .name:
+            viewModel = RestaurantListViewModel(restaurantList: viewModel!.restaurantList) { $0.name < $1.name }
+            restaurantSorted = .distance
+        }
+        tableView.reloadData()
     }
     
     fileprivate func toggleSpinningPizza() {
@@ -112,7 +143,14 @@ extension MasterViewController: LocationManagerDelegate {
                 }
             }
             else if let response = response {
-                self.viewModel = RestaurantListViewModel(restaurantList: response.restaurantList)
+                switch self.restaurantSorted { // FIXME: ABSTRACT CODE DUPLICATION AND CLEAN THIS UP!!!
+                case .distance:
+                    self.viewModel = RestaurantListViewModel(restaurantList: response.restaurantList) { $0.distance < $1.distance }
+                    self.restaurantSorted = .name
+                case .name:
+                    self.viewModel = RestaurantListViewModel(restaurantList: response.restaurantList) { $0.name < $1.name }
+                    self.restaurantSorted = .distance
+                }
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                     self.tableView.tableHeaderView = UIView()

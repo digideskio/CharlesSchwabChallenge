@@ -53,12 +53,12 @@ final class DetailTableViewController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cellType   = viewModel?.availableCells[indexPath.row],
-              let cell       = tableView.dequeueReusableCell(withIdentifier: cellType.cellIdentifier, for: indexPath) as? DetailTableViewCell,
-              let _viewModel = viewModel?.cellViewModel(for: indexPath) else {
+        guard let cellType      = viewModel?.availableCells[indexPath.row],
+              let cellViewModel = viewModel?.cellViewModel(for: indexPath),
+              let cell          = tableView.dequeueReusableCell(withIdentifier: cellType.cellIdentifier, for: indexPath) as? DetailTableViewCell else {
             return tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
         }
-        cell.configure(with: _viewModel)
+        cell.configure(with: cellViewModel)
         return cell
     }
 

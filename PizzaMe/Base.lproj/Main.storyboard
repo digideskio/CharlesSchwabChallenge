@@ -318,6 +318,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Pizza Me" id="Zdf-7t-Un8">
+                        <barButtonItem key="leftBarButtonItem" title="Item" id="HNp-VH-oKC">
+                            <connections>
+                                <action selector="sortRestaurants:" destination="7bK-jq-Zjz" id="bS9-b6-GnJ"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="google-location-icon-icon-location" id="G6d-Pk-jfQ">
                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
@@ -327,6 +332,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="pizzaSpinner" destination="Cnd-FO-f93" id="Ldr-bd-uXh"/>
+                        <outlet property="sortBarButton" destination="HNp-VH-oKC" id="goo-ss-yjc"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>

@@ -11,9 +11,13 @@ import Foundation
 
 struct RestaurantListViewModel {
     let restaurantList: Array<Restaurant>
-    
-    init(restaurantList: Array<Restaurant>) { // TODO: MOVE THIS ELSEWHERE
-        self.restaurantList = restaurantList.sorted { $0.distance < $1.distance }
+}
+
+// MARK: - Initialization
+
+extension RestaurantListViewModel {
+    init(restaurantList: [Restaurant], predicate: (Restaurant, Restaurant) -> Bool) {
+        self.restaurantList = restaurantList.sorted(by: predicate)
     }
 }
 
