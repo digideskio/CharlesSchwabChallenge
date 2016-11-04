@@ -12,22 +12,27 @@ import UIKit
 
 class MasterViewController: UITableViewController {
     
-    enum RestaurantSorted { // TODO: RENAME THIS
+    fileprivate enum SortStyle: CustomStringConvertible {
         case name, distance
+        
+        var description: String {
+            switch self {
+            case .distance: return "Sorted by: distance"
+            case .name:     return "Sorted by: name"
+            }
+        }
     }
     
-
+    private enum StoryBoardSegue: String {
+        case showDetail
+    }
+    
     // MARK: - Property Delcarations
     
     private var detailViewController: DetailTableViewController? = nil
     fileprivate var viewModel:        RestaurantListViewModel?
-    fileprivate var restaurantSorted: RestaurantSorted = .distance {
-        didSet {
-            switch restaurantSorted { // FIXME: FIX THIS BUG
-            case .distance: self.sortBarButton?.title = "Sorted by: distance"
-            case .name:     self.sortBarButton?.title = "Sorted by: name"
-            }
-        }
+    fileprivate var sortStyle: SortStyle = .distance {
+        didSet { sortBarButton?.title = oldValue.description }
     }
     
     // MARK: - IBOutlets
@@ -43,7 +48,7 @@ class MasterViewController: UITableViewController {
             tableView.tableFooterView    = UIView()
             tableView.rowHeight          = UITableViewAutomaticDimension
             tableView.estimatedRowHeight = 100
-            sortBarButton?.title = "" // FIXME: This is sloppy
+            sortBarButton?.title = sortStyle.description
         }
         guard let controllers = splitViewController?.viewControllers else { return }
         detailViewController = (controllers[controllers.count - 1] as? UINavigationController)?.topViewController as? DetailTableViewController
@@ -62,14 +67,15 @@ class MasterViewController: UITableViewController {
     // MARK: - Segues
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showDetail" { // FIXME: MOVE THIS ELSEWHERE
-            if let indexPath = self.tableView.indexPathForSelectedRow {
-                let selection = viewModel?.restaurant(indexPath: indexPath)
-                let controller = (segue.destination as? UINavigationController)?.topViewController as? DetailTableViewController
-                controller?.detailItem = selection
-                controller?.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
-                controller?.navigationItem.leftItemsSupplementBackButton = true
-            }
+        guard let identifier = segue.identifier, let storyBoardSegue = StoryBoardSegue(rawValue: identifier) else { return }
+        switch storyBoardSegue {
+        case .showDetail:
+            guard let indexPath = tableView.indexPathForSelectedRow else { return }
+            let selection = viewModel?.restaurant(indexPath: indexPath)
+            let controller = (segue.destination as? UINavigationController)?.topViewController as? DetailTableViewController
+            controller?.detailItem = selection
+            controller?.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
+            controller?.navigationItem.leftItemsSupplementBackButton = true
         }
     }
 
@@ -100,13 +106,18 @@ class MasterViewController: UITableViewController {
     }
     
     @IBAction fileprivate func sortRestaurants(_ sender: UIBarButtonItem) {
-        switch restaurantSorted { // FIXME: ABSTRACT CODE DUPLICATION AND CLEAN THIS UP!!!
+        guard let restaurants = viewModel?.restaurantList else { return }
+        setRestaurantListViewModel(restaurants: restaurants)
+    }
+    
+    fileprivate func setRestaurantListViewModel(restaurants: [Restaurant]) {
+        switch sortStyle {
         case .distance:
-            viewModel = RestaurantListViewModel(restaurantList: viewModel!.restaurantList) { $0.distance < $1.distance }
-            restaurantSorted = .name
+            viewModel = RestaurantListViewModel(restaurantList: restaurants) { $0.distance < $1.distance }
+            sortStyle = .name
         case .name:
-            viewModel = RestaurantListViewModel(restaurantList: viewModel!.restaurantList) { $0.name < $1.name }
-            restaurantSorted = .distance
+            viewModel = RestaurantListViewModel(restaurantList: restaurants) { $0.name < $1.name }
+            sortStyle = .distance
         }
         tableView.reloadData()
     }
@@ -114,17 +125,17 @@ class MasterViewController: UITableViewController {
     fileprivate func toggleSpinningPizza() {
         guard let pizzaSpinner = pizzaSpinner else { return }
         pizzaSpinner.isHidden = !pizzaSpinner.isHidden
-        if pizzaSpinner.isHidden {
+        guard !pizzaSpinner.isHidden else {
             pizzaSpinner.layer.removeAllAnimations()
-        } else {
-            let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
-            rotationAnimation.toValue      = .pi * 2.0
-            rotationAnimation.duration     = 1.0
-            rotationAnimation.isCumulative = true
-            rotationAnimation.repeatCount  = 100
-            
-            pizzaSpinner.layer.add(rotationAnimation, forKey: "rotationAnimation")
+            return
         }
+        let rotationAnimation          = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotationAnimation.toValue      = .pi * 2.0
+        rotationAnimation.duration     = 1.0
+        rotationAnimation.isCumulative = true
+        rotationAnimation.repeatCount  = 100
+        
+        pizzaSpinner.layer.add(rotationAnimation, forKey: "rotationAnimation")
     }
 }
 
@@ -134,39 +145,43 @@ extension MasterViewController: LocationManagerDelegate {
     func didUpdate(zipCode: String) {
         SearchService().results(for: zipCode) { response, error in
             self.toggleSpinningPizza()
-            if error != nil {
-                let alertController = UIAlertController(title: NSLocalizedString("Error", comment: ""), message: NSLocalizedString("Unable to find any pizza near you.", comment: ""), preferredStyle: .alert)
-                let defaultAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default) { _ in }
-                alertController.addAction(defaultAction)
-                DispatchQueue.main.async {
-                    self.present(alertController, animated: true)
-                }
+            guard let response = response else {
+                guard let error = error else { return }
+                DispatchQueue.main.async { self.presentErrorAlertController(title: "Error", message: "Unable to find any pizza near you:\n\(error.localizedDescription)") }
+                return
             }
-            else if let response = response {
-                switch self.restaurantSorted { // FIXME: ABSTRACT CODE DUPLICATION AND CLEAN THIS UP!!!
-                case .distance:
-                    self.viewModel = RestaurantListViewModel(restaurantList: response.restaurantList) { $0.distance < $1.distance }
-                    self.restaurantSorted = .name
-                case .name:
-                    self.viewModel = RestaurantListViewModel(restaurantList: response.restaurantList) { $0.name < $1.name }
-                    self.restaurantSorted = .distance
-                }
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    self.tableView.tableHeaderView = UIView()
-                }
+            DispatchQueue.main.async {
+                self.setRestaurantListViewModel(restaurants: response.restaurantList)
+                self.tableView.tableHeaderView = UIView()
             }
         }
     }
     
     func didFail(error: Error) {
         toggleSpinningPizza()
-        let alertController = UIAlertController(title: NSLocalizedString("Location Error", comment: ""), message: NSLocalizedString("An error occurred while getting your location.", comment: ""), preferredStyle: .alert)
-        let defaultAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default) { _ in }
-        alertController.addAction(defaultAction)
         DispatchQueue.main.async {
-            self.present(alertController, animated: true)
+            self.presentErrorAlertController(title: "Location Error", message: "An error occurred while getting your location:\n\(error.localizedDescription)")
         }
     }
+    
+    fileprivate func presentErrorAlertController(title: String, message: String, preferredstyle: UIAlertControllerStyle = .alert, actionTitle: String = "OK", actionStyle: UIAlertActionStyle = .default, actionHandler: ((UIAlertAction) -> Void)? = nil) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: preferredstyle)
+        let defaultAction   = UIAlertAction(title: actionTitle, style: actionStyle, handler: actionHandler)
+        alertController.addAction(defaultAction)
+        present(alertController, animated: true)
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

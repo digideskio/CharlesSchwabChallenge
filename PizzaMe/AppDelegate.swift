@@ -13,10 +13,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     var window: UIWindow?
 
     private func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        let splitViewController  = self.window?.rootViewController as? UISplitViewController
-        let navigationController = splitViewController?.viewControllers[splitViewController!.viewControllers.count - 1] as? UINavigationController // FIXME: IMPLICITLY UNWRAPPED OPTIONAL
-        navigationController?.topViewController?.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-        splitViewController?.delegate = self
+        guard let splitViewController  = self.window?.rootViewController as? UISplitViewController else { fatalError("Could not instantiate splitViewController") }
+        let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count - 1] as? UINavigationController
+        navigationController?.topViewController?.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
+        splitViewController.delegate = self
         return true
     }
 
