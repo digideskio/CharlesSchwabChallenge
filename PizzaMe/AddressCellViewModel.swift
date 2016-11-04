@@ -28,7 +28,7 @@ final class AddressCellViewModel: DetailCellViewModel {
         latitude  = restaurant.latitude
     }
     
-    override func getAction() -> String? {
+    override var action: String? {
         return "http://maps.apple.com/?ll=\(latitude),\(longitude)"
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 // MARK: - RestaurantListViewModel
 
 struct RestaurantListViewModel {
-    let restaurantList: Array<Restaurant>
+    let restaurantList: [Restaurant]
 }
 
 // MARK: - Initialization

@@ -22,10 +22,7 @@ final class PhoneCellViewModel: DetailCellViewModel {
         phoneNumber = restaurant.phone
     }
     
-    override func getAction() -> String? {
+    override var action: String? {
         return "tel:" + phoneNumber.components(separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
     }
 }
-
-//        let digits = phoneNumber.components(separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
-//        return "tel:\(digits)"

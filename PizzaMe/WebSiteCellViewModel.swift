@@ -22,7 +22,7 @@ final class WebSiteCellViewModel: DetailCellViewModel {
         webSite = restaurant.businessURL
     }
     
-    override func getAction() -> String? {
+    override var action: String? {
         return webSite
     }
 }

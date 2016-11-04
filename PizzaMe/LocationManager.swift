@@ -48,7 +48,7 @@ extension LocationManager {
 // MARK: - CLLocationManagerDelegate Conformance
 
 extension LocationManager: CLLocationManagerDelegate {
-    private func locationManager(_ manager: CLLocationManager, didFailWithError error: NSError) { // // FIXME: WHAT IS THIS????
+    private func locationManager(_ manager: CLLocationManager, didFailWithError error: NSError) {
         manager.stopUpdatingLocation()
         self.delegate?.didFail(error: error)
     }

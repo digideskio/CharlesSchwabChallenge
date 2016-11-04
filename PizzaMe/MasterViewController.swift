@@ -15,7 +15,7 @@ class MasterViewController: UITableViewController {
     fileprivate enum SortStyle: CustomStringConvertible {
         case name, distance
         
-        var description: String {
+        fileprivate var description: String {
             switch self {
             case .distance: return "Sorted by: distance"
             case .name:     return "Sorted by: name"
@@ -37,8 +37,8 @@ class MasterViewController: UITableViewController {
     
     // MARK: - IBOutlets
     
-    @IBOutlet weak fileprivate var pizzaSpinner:  UIImageView?
-    @IBOutlet weak fileprivate var sortBarButton: UIBarButtonItem?
+    @IBOutlet weak private var pizzaSpinner:  UIImageView?
+    @IBOutlet weak private var sortBarButton: UIBarButtonItem?
 
     // MARK: - ViewController Lifecycle
     
@@ -98,17 +98,19 @@ class MasterViewController: UITableViewController {
 
     // MARK: - IBActions
     
-    @IBAction fileprivate func updateMyLocation(sender: AnyObject) {
+    @IBAction private func updateMyLocation(sender: AnyObject) {
         toggleSpinningPizza()
         let locationManager = LocationManager.sharedInstance
         locationManager.delegate = self
         locationManager.updateLocation()
     }
     
-    @IBAction fileprivate func sortRestaurants(_ sender: UIBarButtonItem) {
+    @IBAction private func sortRestaurants(_ sender: UIBarButtonItem) {
         guard let restaurants = viewModel?.restaurantList else { return }
         setRestaurantListViewModel(restaurants: restaurants)
     }
+    
+    // MARK: - Helper Methods
     
     fileprivate func setRestaurantListViewModel(restaurants: [Restaurant]) {
         switch sortStyle {
@@ -170,18 +172,4 @@ extension MasterViewController: LocationManagerDelegate {
         alertController.addAction(defaultAction)
         present(alertController, animated: true)
     }
-    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

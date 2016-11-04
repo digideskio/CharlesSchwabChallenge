@@ -29,7 +29,7 @@ final class SearchServiceResponse {
         guard let response = response,
               let query    = response[SearchServiceResponseKeys.query],
               let results  = query[SearchServiceResponseKeys.results]  as? [String: AnyObject],
-              let result   = results[SearchServiceResponseKeys.result] as? [[String: AnyObject]]  else { return nil }
+              let result   = results[SearchServiceResponseKeys.result] as? [[String: AnyObject]] else { return nil }
         restaurantList = result.flatMap(Restaurant.init)
     }
 }

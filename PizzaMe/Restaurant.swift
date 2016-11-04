@@ -56,16 +56,3 @@ struct Restaurant {
         self.longitude   = longitude
     }
 }
-
-
-//enum RestaurantKey: String {
-//    case title       = "Title"
-//    case address     = "Address"
-//    case city        = "City"
-//    case state       = "State"
-//    case phone       = "Phone"
-//    case distance    = "Distance"
-//    case businessUrl = "BusinessUrl"
-//    case latitude    = "Latitude"
-//    case longitude   = "Longitude"
-//}

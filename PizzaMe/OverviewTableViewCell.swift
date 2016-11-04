@@ -13,9 +13,9 @@ final class OverviewTableViewCell: DetailTableViewCell {
 
     // MARK: - Property Delcarations
     
-    @IBOutlet var nameLabel:     UILabel?
-    @IBOutlet var cuisineLabel:  UILabel?
-    @IBOutlet var distanceLabel: UILabel?
+    @IBOutlet private var nameLabel:     UILabel?
+    @IBOutlet private var cuisineLabel:  UILabel?
+    @IBOutlet private var distanceLabel: UILabel?
     
     // MARK: - Nib Awakening
     

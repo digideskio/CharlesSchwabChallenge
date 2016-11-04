@@ -13,8 +13,8 @@ final class AddressTableViewCell: DetailTableViewCell {
 
     // MARK: - Property Delcarations
     
-    @IBOutlet var addressLabel:   UILabel?
-    @IBOutlet var cityStateLabel: UILabel?
+    @IBOutlet private var addressLabel:   UILabel?
+    @IBOutlet private var cityStateLabel: UILabel?
     
     // MARK: - Nib Awakening
     

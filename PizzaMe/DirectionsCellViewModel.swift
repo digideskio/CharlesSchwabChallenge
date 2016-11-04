@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - DirectionsCellViewModel
 
-class DirectionsCellViewModel: DetailCellViewModel {
+final class DirectionsCellViewModel: DetailCellViewModel {
     
     // MARK: - Property Delcarations
     
@@ -26,9 +26,8 @@ class DirectionsCellViewModel: DetailCellViewModel {
         state   = restaurant.state
     }
     
-    override func getAction() -> String? {
+    override var action: String? {
         let destinationAddress = "\(address),\(city),\(state)".components(separatedBy: .whitespacesAndNewlines).joined(separator: "+")
         return "http://maps.apple.com/?daddr=\(destinationAddress)"
     }
-    
 }

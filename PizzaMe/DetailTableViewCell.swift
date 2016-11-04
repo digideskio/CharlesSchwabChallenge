@@ -14,6 +14,6 @@ class DetailTableViewCell: UITableViewCell {
     // MARK: - View Configuration
     
     func configure(with viewModel: DetailCellViewModel) {
-        selectionStyle = (viewModel.getAction() != nil) ? .default : .none
+        selectionStyle = (viewModel.action != nil) ? .default : .none
     }
 }

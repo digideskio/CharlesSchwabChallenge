@@ -13,13 +13,13 @@ final class RestaurantTableViewCell: UITableViewCell {
 
     // MARK: - Property Delcarations
     
-    @IBOutlet var name:        UILabel?
-    @IBOutlet var distance:    UILabel?
-    @IBOutlet var address:     UILabel?
-    @IBOutlet var cityState:   UILabel?
-    @IBOutlet var phoneNumber: UILabel?
+    @IBOutlet private var name:        UILabel?
+    @IBOutlet private var distance:    UILabel?
+    @IBOutlet private var address:     UILabel?
+    @IBOutlet private var cityState:   UILabel?
+    @IBOutlet private var phoneNumber: UILabel?
     
-    var viewModel: RestaurantCellViewModel?
+    private var viewModel: RestaurantCellViewModel?
     
     // MARK: - Nib Awakening
     

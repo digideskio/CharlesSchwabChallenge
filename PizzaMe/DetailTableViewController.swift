@@ -28,7 +28,7 @@ final class DetailTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
-        self.navigationController?.navigationBar.tintColor = UIColor.darkGray
+        navigationController?.navigationBar.tintColor = .darkGray
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,7 +38,7 @@ final class DetailTableViewController: UITableViewController {
     // MARK: - View Configuration
     
     private func configureView() {
-        self.title = viewModel?.title
+        title = viewModel?.title
     }
     
     // MARK: - UITableViewDataSource Conformance
@@ -66,7 +66,7 @@ final class DetailTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         defer { tableView.deselectRow(at: indexPath, animated: true) }
-        guard let action = viewModel?.cellViewModel(for: indexPath)?.getAction(), let url = URL(string: action) else { return }
+        guard let action = viewModel?.cellViewModel(for: indexPath)?.action, let url = URL(string: action) else { return }
         UIApplication.shared.openURL(url)
     }
 }

@@ -56,7 +56,7 @@ final class DetailViewModel {
 // MARK: - DetailCellViewModel
 
 class DetailCellViewModel {
-    func getAction() -> String? {
+    var action: String? {
         return nil
     }
 }
