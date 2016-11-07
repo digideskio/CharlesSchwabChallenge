@@ -8,7 +8,7 @@
 import UIKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
+final class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
     var window: UIWindow?
 
@@ -47,9 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
         guard let secondaryAsNavController = secondaryViewController as? UINavigationController,
               let topAsDetailController    = secondaryAsNavController.topViewController as? DetailTableViewController else { return false }
-        if topAsDetailController.detailItem == nil {
-            return true // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
-        }
+        if topAsDetailController.detailItem == nil { return true } // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
         return true
     }
 

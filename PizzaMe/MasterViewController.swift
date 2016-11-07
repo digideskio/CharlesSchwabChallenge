@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - MasterViewController
 
-class MasterViewController: UITableViewController {
+final class MasterViewController: UITableViewController {
     
     fileprivate enum SortStyle: CustomStringConvertible {
         case name, distance
@@ -113,14 +113,14 @@ class MasterViewController: UITableViewController {
     // MARK: - Helper Methods
     
     fileprivate func setRestaurantListViewModel(restaurants: [Restaurant]) {
+        let predicate: (Restaurant, Restaurant) -> Bool
         switch sortStyle {
-        case .distance:
-            viewModel = RestaurantListViewModel(restaurantList: restaurants) { $0.distance < $1.distance }
-            sortStyle = .name
-        case .name:
-            viewModel = RestaurantListViewModel(restaurantList: restaurants) { $0.name < $1.name }
-            sortStyle = .distance
+        case .distance: predicate = { $0.distance < $1.distance }
+                        sortStyle = .name
+        case .name:     predicate = { $0.name < $1.name }
+                        sortStyle = .distance
         }
+        viewModel = RestaurantListViewModel(restaurantList: restaurants, predicate: predicate)
         tableView.reloadData()
     }
     
